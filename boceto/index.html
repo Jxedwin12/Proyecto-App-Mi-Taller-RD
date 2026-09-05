@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>TallerYa — Boceto de app de citas para taller mecánico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --asphalt: #1B1C1E;
+    --steel: #2E3236;
+    --concrete: #E9E6DE;
+    --orange: #F2661C;
+    --caution: #F4B93B;
+    --charcoal: #1D1D1B;
+    --paper: #F6F4EF;
+    --line: rgba(233,230,222,0.14);
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    background: var(--asphalt);
+    background-image:
+      linear-gradient(var(--asphalt), var(--asphalt)),
+      repeating-linear-gradient(135deg, rgba(244,185,59,0.045) 0 18px, transparent 18px 36px);
+    font-family:'Manrope', sans-serif;
+    color: var(--paper);
+    padding: 56px 32px 72px;
+  }
+
+  .top{
+    max-width: 1180px;
+    margin: 0 auto 56px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:32px;
+    border-bottom: 3px solid var(--orange);
+    padding-bottom: 28px;
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:18px;
+  }
+  .badge{ width:64px; height:64px; flex-shrink:0; }
+  .badge svg{ width:100%; height:100%; }
+  .wordblock{ display:flex; flex-direction:column; gap:4px; }
+
+  .wordmark{
+    font-family:'Oswald', sans-serif;
+    font-weight:700;
+    font-size: 36px;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height:1;
+  }
+  .wordmark span{
+    color: var(--asphalt);
+    background: var(--orange);
+    font-size: 22px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .slogan{
+    font-size: 13.5px;
+    color: rgba(246,244,239,0.6);
+    font-weight: 600;
+  }
+
+  .top p{
+    max-width: 380px;
+    font-size: 15px;
+    line-height:1.55;
+    color: rgba(246,244,239,0.68);
+    margin:0;
+  }
+
+  .board{
+    max-width: 1180px;
+    margin: 0 auto;
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+
+  .col{ display:flex; flex-direction:column; gap:18px; }
+
+  .caption{
+    font-family:'Oswald', sans-serif;
+    font-size: 19px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .caption-sub{
+    font-size: 13px;
+    color: rgba(246,244,239,0.55);
+    line-height:1.5;
+    margin-top:-10px;
+  }
+
+  .phone{
+    width: 100%;
+    aspect-ratio: 9/18.5;
+    background: var(--asphalt);
+    border-radius: 30px;
+    padding: 14px;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6);
+    display:flex;
+    flex-direction:column;
+    border: 1px solid rgba(246,244,239,0.08);
+  }
+
+  .screen{
+    flex:1;
+    background: var(--paper);
+    border-radius: 18px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    color: var(--charcoal);
+  }
+
+  .status{
+    height: 30px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 0 20px;
+    font-size: 11px;
+    font-weight:700;
+    color: var(--charcoal);
+  }
+
+  /* ---- Screen 1: Inicio ---- */
+  .s1-header{ padding: 4px 20px 14px; }
+  .s1-greet{ font-size: 12px; color: rgba(29,29,27,0.55); margin-bottom:2px; }
+  .s1-name{
+    font-family:'Oswald', sans-serif;
+    font-size: 22px;
+    font-weight:700;
+    text-transform:uppercase;
+  }
+  .vehicle-chip{
+    margin: 4px 20px 14px;
+    background: var(--steel);
+    color: var(--paper);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size: 12.5px;
+  }
+  .vehicle-chip .plate{
+    background: var(--caution);
+    color: var(--charcoal);
+    font-weight:800;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.03em;
+  }
+  .section-label{
+    padding: 8px 20px 8px;
+    font-size: 13px;
+    font-weight:700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .scrollarea{
+    flex:1;
+    min-height: 0;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    mask-image: linear-gradient(to bottom, black calc(100% - 22px), transparent 100%);
+  }
+  .scrollarea::-webkit-scrollbar{ display:none; }
+
+  .service-list{
+    padding: 0 20px 18px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .service-card{
+    border: 1px solid rgba(27,28,30,0.12);
+    border-radius: 14px;
+    padding: 12px 14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .service-name{ font-size: 13.5px; font-weight:700; }
+  .service-meta{ font-size: 11.5px; color: rgba(29,29,27,0.55); margin-top:3px; }
+  .service-price{ font-family:'Oswald', sans-serif; font-size: 16px; font-weight:600; color: var(--orange); }
+  .tabbar{
+    margin-top:auto;
+    border-top: 1px solid rgba(27,28,30,0.08);
+    padding: 14px 26px 6px;
+    display:flex;
+    justify-content:space-between;
+    font-size: 10px;
+    color: rgba(29,29,27,0.4);
+    font-weight:700;
+    text-transform:uppercase;
+  }
+  .tabbar .active{ color: var(--charcoal); }
+
+  /* ---- Screen 2: Horario ---- */
+  .s2-header{ padding: 4px 20px 4px; }
+  .back{ font-size: 12px; color: rgba(29,29,27,0.5); }
+  .s2-title{
+    font-family:'Oswald', sans-serif;
+    font-size: 20px;
+    font-weight:700;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+  .days{
+    display:flex;
+    gap:8px;
+    padding: 16px 20px 4px;
+  }
+  .day{
+    flex:1;
+    text-align:center;
+    padding: 9px 0 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    background: rgba(27,28,30,0.05);
+  }
+  .day .num{ font-family:'Oswald', sans-serif; font-size:15px; font-weight:700; display:block; margin-top:2px;}
+  .day.sel{ background: var(--asphalt); color: var(--paper); }
+  .day.sel .num{ color: var(--orange); }
+
+  .slot-label{ padding: 18px 20px 8px; font-size: 13px; font-weight:700; text-transform: uppercase; }
+  .slots{
+    padding: 0 20px;
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap:8px;
+  }
+  .slot{
+    text-align:center;
+    padding: 10px 0;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight:700;
+    border: 1px solid rgba(27,28,30,0.14);
+    color: rgba(29,29,27,0.65);
+  }
+  .slot.full{ color: rgba(29,29,27,0.25); border-style:dashed; }
+  .slot.chosen{ background: var(--orange); border-color: var(--orange); color: var(--paper); }
+
+  .bay-note{
+    margin: 14px 20px 0;
+    font-size: 11.5px;
+    color: rgba(29,29,27,0.5);
+  }
+
+  .cta{
+    margin: auto 20px 18px;
+    background: var(--asphalt);
+    color: var(--paper);
+    text-align:center;
+    padding: 15px 0;
+    border-radius: 12px;
+    font-size: 13.5px;
+    font-weight:800;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  /* ---- Screen 3: Confirmación ---- */
+  .s3-wrap{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 28px 22px 20px;
+    text-align:center;
+  }
+  .check{
+    width:56px; height:56px;
+    border-radius:50%;
+    background: var(--orange);
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom: 16px;
+  }
+  .check svg{ width:26px; height:26px; }
+  .s3-title{
+    font-family:'Oswald', sans-serif;
+    font-size: 21px;
+    font-weight:700;
+    text-transform: uppercase;
+  }
+  .s3-sub{
+    font-size: 12.5px;
+    color: rgba(29,29,27,0.55);
+    margin-top:6px;
+    line-height:1.5;
+  }
+  .ticket{
+    width:100%;
+    margin-top:24px;
+    border: 1px solid rgba(27,28,30,0.14);
+    border-radius: 16px;
+    padding: 18px;
+    text-align:left;
+  }
+  .ticket-row{
+    display:flex;
+    justify-content:space-between;
+    padding: 7px 0;
+    font-size: 12.5px;
+    border-bottom: 1px dashed rgba(27,28,30,0.14);
+  }
+  .ticket-row:last-child{ border-bottom:none; }
+  .ticket-row .k{ color: rgba(29,29,27,0.5); }
+  .ticket-row .v{ font-weight:700; }
+  .add-cal{
+    margin-top:20px;
+    width:100%;
+    border: 1.5px solid var(--asphalt);
+    color: var(--asphalt);
+    text-align:center;
+    padding: 13px 0;
+    border-radius: 12px;
+    font-size: 12.5px;
+    font-weight:800;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 860px){
+    .board{ grid-template-columns: 1fr; max-width: 380px; }
+    .top{ flex-direction:column; align-items:flex-start; }
+  }
+
+  /* ---- Screen 0: Inicio de sesión ---- */
+  .login-wrap{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: 34px 24px 22px;
+    text-align:center;
+  }
+  .login-badge{ width:56px; height:56px; margin-bottom:14px; }
+  .login-badge svg{ width:100%; height:100%; }
+  .login-title{
+    font-family:'Oswald', sans-serif;
+    font-size: 20px;
+    font-weight:700;
+    text-transform:uppercase;
+  }
+  .login-sub{
+    font-size: 12px;
+    color: rgba(29,29,27,0.5);
+    margin-top:4px;
+    margin-bottom: 26px;
+  }
+  .field{ width:100%; text-align:left; margin-bottom:14px; }
+  .field-label{
+    font-size: 11px;
+    font-weight:700;
+    color: rgba(29,29,27,0.55);
+    margin-bottom:6px;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+  }
+  .field-input{
+    border: 1px solid rgba(27,28,30,0.16);
+    border-radius: 12px;
+    padding: 13px 14px;
+    font-size: 13px;
+    color: rgba(29,29,27,0.4);
+  }
+  .login-cta{
+    width:100%;
+    margin-top: 8px;
+    background: var(--orange);
+    color: var(--paper);
+    text-align:center;
+    padding: 14px 0;
+    border-radius: 12px;
+    font-size: 13.5px;
+    font-weight:800;
+    text-transform: uppercase;
+  }
+  .login-forgot{
+    font-size: 12px;
+    color: rgba(29,29,27,0.5);
+    margin-top: 16px;
+  }
+  .login-divider{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    width:100%;
+    margin: 22px 0 16px;
+    font-size: 11px;
+    color: rgba(29,29,27,0.4);
+  }
+  .login-divider::before, .login-divider::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background: rgba(27,28,30,0.12);
+  }
+  .login-signup{
+    margin-top:auto;
+    font-size: 12.5px;
+    color: rgba(29,29,27,0.55);
+  }
+  .login-signup b{ color: var(--orange); }
+
+  /* ---- Screen 5: Historial ---- */
+  .hist-header{ padding: 4px 20px 4px; }
+  .hist-title{
+    font-family:'Oswald', sans-serif;
+    font-size: 21px;
+    font-weight:700;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+  .hist-list{
+    padding: 14px 20px 18px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .hist-card{
+    border: 1px solid rgba(27,28,30,0.12);
+    border-radius: 14px;
+    padding: 12px 14px;
+  }
+  .hist-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+  }
+  .hist-name{ font-size: 13.5px; font-weight:700; }
+  .hist-meta{ font-size: 11.5px; color: rgba(29,29,27,0.5); margin-top:3px; }
+  .hist-status{
+    font-size: 10.5px;
+    font-weight:800;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 20px;
+    white-space:nowrap;
+  }
+  .hist-status.done{ background: rgba(46,125,91,0.14); color: #2E7D5B; }
+  .hist-status.cancel{ background: rgba(27,28,30,0.1); color: rgba(29,29,27,0.5); }
+  .hist-price{ font-family:'Oswald', sans-serif; font-size: 15px; font-weight:600; margin-top:8px; }
+
+  /* ---- Screen 6: Perfil ---- */
+  .prof-header{
+    padding: 14px 20px 18px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .avatar{
+    width:52px; height:52px;
+    border-radius:50%;
+    background: var(--asphalt);
+    color: var(--paper);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Oswald', sans-serif;
+    font-weight:700;
+    font-size: 17px;
+    flex-shrink:0;
+  }
+  .prof-name{ font-family:'Oswald', sans-serif; font-size: 17px; font-weight:700; }
+  .prof-phone{ font-size: 12px; color: rgba(29,29,27,0.5); margin-top:2px; }
+  .prof-veh-label{ padding: 4px 20px 8px; font-size: 12px; font-weight:700; text-transform:uppercase; color: rgba(29,29,27,0.55); }
+  .prof-vehicles{ display:flex; gap:8px; padding: 0 20px 6px; }
+  .prof-vehicle{
+    flex:1;
+    border: 1px solid rgba(27,28,30,0.12);
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 11.5px;
+    font-weight:700;
+  }
+  .prof-vehicle span{ display:block; font-weight:500; color: rgba(29,29,27,0.5); font-size:10.5px; margin-top:2px; }
+  .menu{
+    margin-top: 10px;
+    display:flex;
+    flex-direction:column;
+  }
+  .menu-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding: 14px 20px;
+    font-size: 13px;
+    font-weight:600;
+    border-top: 1px solid rgba(27,28,30,0.08);
+  }
+  .menu-item .chev{ color: rgba(29,29,27,0.3); font-weight:700; }
+  .menu-item.danger{ color: var(--orange); margin-top:auto; }
+</style>
+</head>
+<body>
+
+  <div class="top">
+    <div class="brand">
+      <div class="badge">
+        <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="320" height="320" rx="58" fill="#1B1C1E"/>
+          <polygon points="218,128 189,178.2 131,178.2 102,128 131,77.8 189,77.8" fill="none" stroke="#F4B93B" stroke-width="13"/>
+          <circle cx="160" cy="128" r="24" fill="#1B1C1E"/>
+          <g transform="rotate(-45 160 168)">
+            <rect x="70" y="157" width="180" height="22" rx="11" fill="#F2661C"/>
+            <circle cx="80" cy="168" r="19" fill="#F2661C"/>
+            <circle cx="240" cy="168" r="19" fill="#F2661C"/>
+          </g>
+        </svg>
+      </div>
+      <div class="wordblock">
+        <div class="wordmark">Mi Taller<span>RD</span></div>
+        <div class="slogan">Tu cita, sin vueltas.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="board">
+
+    <div class="col">
+      <div class="caption">Inicio de sesión</div>
+      <div class="caption-sub">El cliente entra con su teléfono y contraseña, o crea una cuenta nueva.</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="login-wrap">
+            <div class="login-badge">
+              <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0" y="0" width="320" height="320" rx="58" fill="#1B1C1E"/>
+                <polygon points="218,128 189,178.2 131,178.2 102,128 131,77.8 189,77.8" fill="none" stroke="#F4B93B" stroke-width="13"/>
+                <circle cx="160" cy="128" r="24" fill="#1B1C1E"/>
+                <g transform="rotate(-45 160 168)">
+                  <rect x="70" y="157" width="180" height="22" rx="11" fill="#F2661C"/>
+                  <circle cx="80" cy="168" r="19" fill="#F2661C"/>
+                  <circle cx="240" cy="168" r="19" fill="#F2661C"/>
+                </g>
+              </svg>
+            </div>
+            <div class="login-title">Mi Taller RD</div>
+            <div class="login-sub">Tu cita, sin vueltas.</div>
+            <div class="field">
+              <div class="field-label">Teléfono</div>
+              <div class="field-input">829 555 0192</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Contraseña</div>
+              <div class="field-input">••••••••</div>
+            </div>
+            <div class="login-cta">Iniciar sesión</div>
+            <div class="login-forgot">¿Olvidaste tu contraseña?</div>
+            <div class="login-divider">o</div>
+            <div class="login-signup">¿No tienes cuenta? <b>Regístrate</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="caption">Inicio</div>
+      <div class="caption-sub">El cliente confirma su vehículo y elige el servicio que necesita.</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="s1-header" style="display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <div class="s1-greet">Buenas, Edwin</div>
+              <div class="s1-name">¿Qué le hacemos hoy?</div>
+            </div>
+            <svg width="34" height="34" viewBox="0 0 320 320" style="flex-shrink:0;">
+              <rect x="0" y="0" width="320" height="320" rx="58" fill="#1B1C1E"/>
+              <polygon points="218,128 189,178.2 131,178.2 102,128 131,77.8 189,77.8" fill="none" stroke="#F4B93B" stroke-width="13"/>
+              <circle cx="160" cy="128" r="24" fill="#1B1C1E"/>
+              <g transform="rotate(-45 160 168)">
+                <rect x="70" y="157" width="180" height="22" rx="11" fill="#F2661C"/>
+                <circle cx="80" cy="168" r="19" fill="#F2661C"/>
+                <circle cx="240" cy="168" r="19" fill="#F2661C"/>
+              </g>
+            </svg>
+          </div>
+          <div class="vehicle-chip">
+            <span>Hyundai Elantra 2019</span>
+            <span class="plate">A628714</span>
+          </div>
+          <div class="section-label">Servicios disponibles</div>
+          <div class="scrollarea">
+            <div class="service-list">
+              <div class="service-card">
+                <div>
+                  <div class="service-name">Cambio de aceite</div>
+                  <div class="service-meta">Incluye filtro · 30 min</div>
+                </div>
+                <div class="service-price">RD$1,800</div>
+              </div>
+              <div class="service-card">
+                <div>
+                  <div class="service-name">Frenos delanteros</div>
+                  <div class="service-meta">Pastillas + revisión · 1 h</div>
+                </div>
+                <div class="service-price">RD$3,200</div>
+              </div>
+              <div class="service-card">
+                <div>
+                  <div class="service-name">Alineación y balanceo</div>
+                  <div class="service-meta">4 ruedas · 45 min</div>
+                </div>
+                <div class="service-price">RD$2,500</div>
+              </div>
+              <div class="service-card">
+                <div>
+                  <div class="service-name">Cambio de batería</div>
+                  <div class="service-meta">Instalación incluida · 20 min</div>
+                </div>
+                <div class="service-price">RD$3,500</div>
+              </div>
+              <div class="service-card">
+                <div>
+                  <div class="service-name">Aire acondicionado</div>
+                  <div class="service-meta">Recarga de gas + revisión · 1 h</div>
+                </div>
+                <div class="service-price">RD$2,200</div>
+              </div>
+              <div class="service-card">
+                <div>
+                  <div class="service-name">Suspensión</div>
+                  <div class="service-meta">Amortiguadores y rótulas · 2 h</div>
+                </div>
+                <div class="service-price">RD$4,800</div>
+              </div>
+              <div class="service-card">
+                <div>
+                  <div class="service-name">Diagnóstico computarizado</div>
+                  <div class="service-meta">Escaneo de fallas · 25 min</div>
+                </div>
+                <div class="service-price">RD$1,200</div>
+              </div>
+              <div class="service-card">
+                <div>
+                  <div class="service-name">Cambio de correa de tiempo</div>
+                  <div class="service-meta">Con kit completo · 3 h</div>
+                </div>
+                <div class="service-price">RD$6,500</div>
+              </div>
+            </div>
+          </div>
+          <div class="tabbar">
+            <span class="active">Inicio</span>
+            <span>Citas</span>
+            <span>Historial</span>
+            <span>Perfil</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="caption">Elige tu hora</div>
+      <div class="caption-sub">Disponibilidad real de las bahías del taller para ese servicio.</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="s2-header">
+            <div class="back">← Frenos delanteros</div>
+            <div class="s2-title">Elige tu hora</div>
+          </div>
+          <div class="days">
+            <div class="day">LUN<span class="num">14</span></div>
+            <div class="day sel">MAR<span class="num">15</span></div>
+            <div class="day">MIÉ<span class="num">16</span></div>
+            <div class="day">JUE<span class="num">17</span></div>
+            <div class="day">VIE<span class="num">18</span></div>
+          </div>
+          <div class="slot-label">Horarios · martes 15</div>
+          <div class="slots">
+            <div class="slot">8:00</div>
+            <div class="slot full">9:00</div>
+            <div class="slot">10:00</div>
+            <div class="slot chosen">1:00</div>
+            <div class="slot">2:00</div>
+            <div class="slot full">3:00</div>
+          </div>
+          <div class="bay-note">Bahía 2 · mecánico: Frank Peña</div>
+          <div class="cta">Confirmar 1:00 pm</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="caption">Cita confirmada</div>
+      <div class="caption-sub">Resumen de la cita con datos del vehículo y opción de recordatorio.</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="s3-wrap">
+            <div class="check">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#F6F4EF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="s3-title">Cita confirmada</div>
+            <div class="s3-sub">Te avisamos por WhatsApp una hora antes.<br>Puedes reprogramar hasta 3 horas antes.</div>
+            <div class="ticket">
+              <div class="ticket-row"><span class="k">Servicio</span><span class="v">Frenos delanteros</span></div>
+              <div class="ticket-row"><span class="k">Vehículo</span><span class="v">Elantra · A628714</span></div>
+              <div class="ticket-row"><span class="k">Fecha</span><span class="v">Mar 15, 1:00 pm</span></div>
+              <div class="ticket-row"><span class="k">Taller</span><span class="v">San Francisco de Macorís</span></div>
+              <div class="ticket-row"><span class="k">Total</span><span class="v">RD$3,200</span></div>
+            </div>
+            <div class="add-cal">Añadir al calendario</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="caption">Historial</div>
+      <div class="caption-sub">Citas pasadas del cliente, con su estado y lo que pagó cada vez.</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="hist-header">
+            <div class="hist-title">Historial</div>
+          </div>
+          <div class="scrollarea">
+            <div class="hist-list">
+              <div class="hist-card">
+                <div class="hist-top">
+                  <div>
+                    <div class="hist-name">Frenos delanteros</div>
+                    <div class="hist-meta">15 mar · Elantra A628714</div>
+                  </div>
+                  <div class="hist-status done">Completado</div>
+                </div>
+                <div class="hist-price">RD$3,200</div>
+              </div>
+              <div class="hist-card">
+                <div class="hist-top">
+                  <div>
+                    <div class="hist-name">Cambio de aceite</div>
+                    <div class="hist-meta">2 feb · Elantra A628714</div>
+                  </div>
+                  <div class="hist-status done">Completado</div>
+                </div>
+                <div class="hist-price">RD$1,800</div>
+              </div>
+              <div class="hist-card">
+                <div class="hist-top">
+                  <div>
+                    <div class="hist-name">Diagnóstico computarizado</div>
+                    <div class="hist-meta">20 ene · Elantra A628714</div>
+                  </div>
+                  <div class="hist-status cancel">Cancelada</div>
+                </div>
+                <div class="hist-price">RD$1,200</div>
+              </div>
+              <div class="hist-card">
+                <div class="hist-top">
+                  <div>
+                    <div class="hist-name">Alineación y balanceo</div>
+                    <div class="hist-meta">8 dic · Elantra A628714</div>
+                  </div>
+                  <div class="hist-status done">Completado</div>
+                </div>
+                <div class="hist-price">RD$2,500</div>
+              </div>
+            </div>
+          </div>
+          <div class="tabbar">
+            <span>Inicio</span>
+            <span>Citas</span>
+            <span class="active">Historial</span>
+            <span>Perfil</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="caption">Perfil</div>
+      <div class="caption-sub">Datos del cliente, sus vehículos guardados y ajustes de la cuenta.</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="prof-header">
+            <div class="avatar">ET</div>
+            <div>
+              <div class="prof-name">Edwin Tejada</div>
+              <div class="prof-phone">829 555 0192</div>
+            </div>
+          </div>
+          <div class="prof-veh-label">Mis vehículos</div>
+          <div class="prof-vehicles">
+            <div class="prof-vehicle">Elantra 2019<span>A628714</span></div>
+            <div class="prof-vehicle">Rav4 2021<span>A902341</span></div>
+          </div>
+          <div class="menu">
+            <div class="menu-item"><span>Mis vehículos</span><span class="chev">›</span></div>
+            <div class="menu-item"><span>Métodos de pago</span><span class="chev">›</span></div>
+            <div class="menu-item"><span>Notificaciones</span><span class="chev">›</span></div>
+            <div class="menu-item"><span>Ayuda y soporte</span><span class="chev">›</span></div>
+            <div class="menu-item danger"><span>Cerrar sesión</span><span class="chev">›</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
