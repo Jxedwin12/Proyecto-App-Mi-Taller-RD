@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import '../models/cita.dart';
 import '../models/service.dart';
+import '../services/database_service.dart';
+import '../services/offline_sync_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import 'confirmation_screen.dart';
@@ -26,6 +29,56 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   int selectedDay = 1;
   String selectedSlot = '1:00';
+
+  // Guarda la cita (o la deja en cola si no hay internet) y luego
+  // pasa a la pantalla de confirmación.
+  Future<void> _confirmar() async {
+    final dayText = '${days[selectedDay]['label']} ${days[selectedDay]['num']}';
+
+    // Primero se guarda en la base local, así la cita no se pierde
+    // aunque no haya internet.
+    await DatabaseService.instance.insertarCita(
+      Cita(
+        servicio: widget.service.name,
+        dia: dayText,
+        hora: selectedSlot,
+        estado: 'pendiente',
+      ),
+    );
+
+    final queued = await OfflineSyncService.instance.save(
+      '/posts',
+      'POST',
+      {
+        'servicio': widget.service.name,
+        'dia': dayText,
+        'hora': selectedSlot,
+      },
+    );
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          queued
+              ? 'Sin conexión: la cita se enviará sola'
+              : 'Cita enviada',
+        ),
+      ),
+    );
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ConfirmationScreen(
+          service: widget.service,
+          day: dayText,
+          time: selectedSlot,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,16 +170,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => ConfirmationScreen(
-                      service: widget.service,
-                      day: '${days[selectedDay]['label']} ${days[selectedDay]['num']}',
-                      time: selectedSlot,
-                    ),
-                  ),
-                ),
+                onPressed: _confirmar,
                 child: Text('CONFIRMAR $selectedSlot PM'),
               ),
             ),

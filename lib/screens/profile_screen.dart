@@ -45,8 +45,8 @@ class ProfileScreen extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Ramón Pérez', style: appHeading(size: 16)),
-                    Text('829 555 0192', style: appBody(size: 12, color: AppColors.charcoal.withOpacity(0.5))),
+                    Text('Edwin Tejada Nuñez', style: appHeading(size: 16)),
+                    Text('809 693 5331', style: appBody(size: 12, color: AppColors.charcoal.withOpacity(0.5))),
                   ],
                 ),
               ],
@@ -63,7 +63,7 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 Expanded(child: _vehicleCard('Elantra 2019', 'A628714')),
                 const SizedBox(width: 8),
-                Expanded(child: _vehicleCard('Rav4 2021', 'A902341')),
+                Expanded(child: _vehicleCard('Kia K5 2021', 'A902341')),
               ],
             ),
           ),

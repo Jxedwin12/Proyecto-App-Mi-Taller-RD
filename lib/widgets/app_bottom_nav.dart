@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../screens/home_screen.dart';
+import '../screens/citas_screen.dart';
 import '../screens/history_screen.dart';
 import '../screens/profile_screen.dart';
 
@@ -18,6 +19,9 @@ class AppBottomNav extends StatelessWidget {
       case 0:
         screen = const HomeScreen();
         break;
+      case 1:
+        screen = const CitasScreen();
+        break;
       case 2:
         screen = const HistoryScreen();
         break;
@@ -25,7 +29,7 @@ class AppBottomNav extends StatelessWidget {
         screen = const ProfileScreen();
         break;
       default:
-        return; // "Citas" de estado pendiente de implementar
+        return;
     }
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => screen));
   }

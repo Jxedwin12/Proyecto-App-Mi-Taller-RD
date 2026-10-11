@@ -1,6 +1,27 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Internet y estado de red (API REST y detección de conexión) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Ubicación (GPS y mapa) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Bluetooth en Android 12 o superior -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+
+    <!-- Bluetooth en Android 11 o inferior -->
+    <uses-permission android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+
     <application
-        android:label="flutter_application_1"
+        android:label="Mi Taller RD"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -12,19 +12,40 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _phoneController = TextEditingController();
+  final _userController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  // Credenciales.
+  static const String _usuarioCorrecto = 'Edwin';
+  static const String _contrasenaCorrecta = 'TallerRD2026';
 
   @override
   void dispose() {
-    _phoneController.dispose();
+    _userController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   void _login() {
-    // Aquí iría la llamada real a tu backend / Firebase Auth / etc.
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+    final usuario = _userController.text.trim();
+    final contrasena = _passwordController.text;
+
+    if (usuario == _usuarioCorrecto &&
+        contrasena == _contrasenaCorrecta) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const HomeScreen(),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Usuario o contraseña incorrectos.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -40,23 +61,38 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 16),
               Text('Mi Taller RD', style: appHeading(size: 22)),
               const SizedBox(height: 4),
-              Text('Tu cita, sin vueltas.', style: appBody(size: 12.5, color: AppColors.charcoal.withOpacity(0.55))),
+              Text(
+                'Tu cita, sin vueltas.',
+                style: appBody(
+                  size: 12.5,
+                  color: AppColors.charcoal.withOpacity(0.55),
+                ),
+              ),
               const SizedBox(height: 32),
               TextField(
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
+                controller: _userController,
+                textInputAction: TextInputAction.next,
                 decoration: const InputDecoration(
-                  labelText: 'Teléfono',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
+                  labelText: 'Usuario',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(12),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 14),
               TextField(
                 controller: _passwordController,
                 obscureText: true,
+                onSubmitted: (_) => _login(),
                 decoration: const InputDecoration(
                   labelText: 'Contraseña',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(12),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -68,17 +104,52 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               TextButton(
-                onPressed: () {},
-                child: Text('¿Olvidaste tu contraseña?', style: appBody(size: 12, color: AppColors.charcoal.withOpacity(0.55))),
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Contacta con el administrador para recuperar el acceso.',
+                      ),
+                    ),
+                  );
+                },
+                child: Text(
+                  '¿Olvidaste tu contraseña?',
+                  style: appBody(
+                    size: 12,
+                    color: AppColors.charcoal.withOpacity(0.55),
+                  ),
+                ),
               ),
               const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('¿No tienes cuenta? ', style: appBody(size: 12.5, color: AppColors.charcoal.withOpacity(0.6))),
+                  Text(
+                    '¿No tienes cuenta? ',
+                    style: appBody(
+                      size: 12.5,
+                      color: AppColors.charcoal.withOpacity(0.6),
+                    ),
+                  ),
                   GestureDetector(
-                    onTap: () {},
-                    child: Text('Regístrate', style: appBody(size: 12.5, color: AppColors.orange, weight: FontWeight.w700)),
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'El registro de usuarios aún no está disponible.',
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Regístrate',
+                      style: appBody(
+                        size: 12.5,
+                        color: AppColors.orange,
+                        weight: FontWeight.w700,
+                      ),
+                    ),
                   ),
                 ],
               ),
